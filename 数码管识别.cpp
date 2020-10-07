@@ -15,34 +15,30 @@ int main(int argc, char** argv) {
         return -1;
     }
     g_srcImage = imread( argv[1], 1);
-
-    // 获取图片的高和宽
-    //int w = g_srcImage.cols;
-    //int h = g_srcImage.rows;
-    //resize(g_srcImage, g_srcImage, Size(250, 250*h/w));
     
-    namedWindow("嘻嘻嘻", 1);
-    imshow("嘻嘻嘻", g_srcImage);
+    namedWindow("不忘初心", 1);
+    imshow("不忘初心", g_srcImage);
 
     Mat hsv;
-    cvtColor( g_srcImage, g_srcImage, COLOR_BGR2HSV );
-    // 转换为hsv空间
-    //
-    // 设置hsv的上下限
-    int iLowH = 59;
-    int iHighH = 255;
-    int iLowS = 159;
-    int iHighS = 255;
-    int iLowV = 190;
-    int iHighV = 255;
 
-    // 分离通道
-    vector<Mat> hsvSplit;
-    split(g_srcImage, hsvSplit);
+    int RedL = 230;
+    int RedH = 255;
+    int GreenL = 0;
+    int GreenH = 200;
+    int BlueL = 0;
+    int BlueH = 200;
 
-    inRange(g_srcImage, Scalar(iLowH, iLowS, iLowV), Scalar(iHighH, iHighS, iHighV), hsv);
-    namedWindow( "哈哈哈", WINDOW_AUTOSIZE );
-    imshow("哈哈哈", hsv);
+    inRange(g_srcImage, Scalar(BlueL, GreenL, RedL), Scalar(BlueH, GreenH, RedH), hsv);
+    namedWindow( "二值化", WINDOW_AUTOSIZE );
+    imshow("二值化", hsv);
+
+    Mat element=getStructuringElement(MORPH_RECT,Size(5,5));//获取核
+    dilate(hsv,hsv,element); //膨胀
+    dilate(hsv,hsv,element);
+    namedWindow("膨胀一波", WINDOW_AUTOSIZE);
+    imshow("膨胀一波",hsv);
+
     waitKey(0);
     return 0;
 }
+// sudo  g++ 数码管识别.cpp -o 数码管识别 `pkg-config --cflags --libs opencv`
